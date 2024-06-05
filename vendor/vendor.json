@@ -69,6 +69,28 @@
 			"revisionTime": "2017-11-19T17:43:26Z"
 		},
 		{
+			"checksumSHA1": "PFBx/FT8SE++EokV5xJFwetwpZw=",
+			"path": "github.com/ugorji/go",
+			"revision": "efe75d2c0faddbd369c84e101075bbf5dfa7373b",
+			"revisionTime": "2020-11-11T06:16:49Z",
+			"version": "v1.1",
+			"versionExact": "v1.1.14"
+		},
+		{
+			"checksumSHA1": "xqxXznxH4VtX3ugKVROEELp+OE0=",
+			"path": "github.com/ugorji/go/codec",
+			"revision": "efe75d2c0faddbd369c84e101075bbf5dfa7373b",
+			"revisionTime": "2020-11-11T06:16:49Z",
+			"version": "v1.1",
+			"versionExact": "v1.1.14"
+		},
+		{
+			"checksumSHA1": "E4QsHGrLEvg268CaKpEzeywPZCQ=",
+			"path": "golang.org/x/exp/rand",
+			"revision": "ee2e2e1199855f8b0b515d61d819e35a97b54f23",
+			"revisionTime": "2018-12-21T01:44:27Z"
+		},
+		{
 			"checksumSHA1": "xJ411WtNO4qnFH8/v1a+HYLhVA4=",
 			"path": "golang.org/x/sys/unix",
 			"revision": "28a7276518d399b9634904daad79e18b44d481bc",
