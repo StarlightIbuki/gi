@@ -6,8 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/gijit/gi/pkg/compiler"
 	"path"
+
+	"github.com/gijit/gi/pkg/compiler"
 )
 
 var ProgramName string = path.Base(os.Args[0])
@@ -23,7 +24,7 @@ func setCompilerVersion() {
 	compiler.LuajitVersion = LuajitVersion
 }
 
-func main() {
+func main_old() {
 	setCompilerVersion()
 	myflags := flag.NewFlagSet("gi", flag.ExitOnError)
 	cfg := compiler.NewGIConfig()
@@ -57,4 +58,9 @@ https://github.com/gijit/gi/blob/master/LICENSE
 	}
 
 	cfg.LuajitMain()
+}
+
+func main() {
+	cfg := compiler.NewGIConfig()
+	cfg.TranslatorMain()
 }

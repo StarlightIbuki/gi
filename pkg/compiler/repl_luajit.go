@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"runtime"
 	"strconv"
@@ -92,6 +93,20 @@ func (cfg *GIConfig) LuajitMain() {
 		}()
 		r.Loop()
 	}
+}
+
+func (cfg *GIConfig) TranslatorMain() {
+	lvm, err := NewLuaVmWithPrelude(cfg)
+	panicOn(err)
+
+	inc := NewIncrState(lvm, cfg)
+
+	goprog, err := ioutil.ReadAll(os.Stdin)
+	panicOn(err)
+
+	translation, err := TranslateAndCatchPanic(inc, goprog)
+	panicOn(err)
+	println(translation)
 }
 
 type Repl struct {

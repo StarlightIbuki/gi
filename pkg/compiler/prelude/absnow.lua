@@ -72,17 +72,18 @@ elseif jit.os == "OSX" then
 else
    -- for linux, clock_gettime(CLOCK_MONOTONIC)
 
-   ffi.cdef[[
-    typedef long time_t;
-    typedef int clockid_t;
-
-    typedef struct timespec {
-            time_t   tv_sec;        /* seconds */
-            long     tv_nsec;       /* nanoseconds */
-    } nanotime;
-    int clock_gettime(clockid_t clk_id, struct timespec *tp);
-   ]]
-
+   if ffi.typeof("nanotime") == nil then
+      ffi.cdef[[
+       typedef long time_t;
+       typedef int clockid_t;
+   
+       typedef struct timespec {
+               time_t   tv_sec;        /* seconds */
+               long     tv_nsec;       /* nanoseconds */
+       } nanotime;
+       int clock_gettime(clockid_t clk_id, struct timespec *tp);
+      ]]   
+   end
    __abs_now=function()
       local pnano = assert(ffi.new("nanotime[?]", 1))
 
