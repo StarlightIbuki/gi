@@ -95,13 +95,13 @@ func (cfg *GIConfig) LuajitMain() {
 	}
 }
 
-func (cfg *GIConfig) TranslatorMain() {
+func (cfg *GIConfig) TranslatorMain(path string) {
 	lvm, err := NewLuaVmWithPrelude(cfg)
 	panicOn(err)
 
 	inc := NewIncrState(lvm, cfg)
 
-	goprog, err := ioutil.ReadAll(os.Stdin)
+	goprog, err := ioutil.ReadFile(path)
 	panicOn(err)
 
 	translation, err := TranslateAndCatchPanic(inc, goprog)

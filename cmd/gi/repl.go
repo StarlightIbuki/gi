@@ -62,5 +62,5 @@ https://github.com/gijit/gi/blob/master/LICENSE
 
 func main() {
 	cfg := compiler.NewGIConfig()
-	cfg.TranslatorMain()
+	cfg.TranslatorMain(os.Args[1])
 }
