@@ -55,7 +55,10 @@ func (c *funcContext) translateExpr(expr ast.Expr, desiredType types.Type) (xprn
 	//vv("top of translateExpr")
 
 	exprType := c.p.TypeOf(expr)
+	exprStr := c.exprToString(expr)
+	isKong := strings.HasPrefix(exprStr, "kong.")
 	//vv("expr in Go is '%s'", c.exprToString(expr)) // __send
+	// fmt.Printf("expr in Go is '%s', isKong? %t\n", exprStr, isKong)
 	desiredStr := "<nil>"
 	if desiredType != nil {
 		desiredStr = desiredType.String()
@@ -151,6 +154,7 @@ func (c *funcContext) translateExpr(expr ast.Expr, desiredType types.Type) (xprn
 	}
 
 	pp("expr is type %T", expr)
+	// fmt.Printf("expr is type %T\n", expr)
 	var obj types.Object
 	switch e := expr.(type) {
 	case *ast.SelectorExpr:
@@ -750,7 +754,11 @@ func (c *funcContext) translateExpr(expr ast.Expr, desiredType types.Type) (xprn
 			pp("expressions.go:586, sel = '%#v', e='%#v'", sel, e) // sel is nil, e is not
 			pp("jea expressions.go:589, our ast.SelectorExpr.X='%#v', .Sel='%#v'", e.X, e.Sel)
 			// e.X.Name == "fmt", e.Sel.Name == "Sprintf"; both are *ast.Ident
-			return c.formatExpr("%s", c.objectName(obj))
+			if isKong {
+				return c.formatExpr("%s", exprStr)
+			} else {
+				return c.formatExpr("%s", c.objectName(obj))
+			}
 		}
 
 		switch sel.Kind() {
@@ -789,7 +797,15 @@ func (c *funcContext) translateExpr(expr ast.Expr, desiredType types.Type) (xprn
 			return c.formatExpr("(%s)", c.translateConversion(e.Args[0], c.p.TypeOf(plainFun)))
 		}
 
-		sig := c.p.TypeOf(plainFun).Underlying().(*types.Signature)
+		var sig *types.Signature
+		if isKong {
+			// Special treat to kong.*
+			// funcExprStr := c.exprToString(plainFun)
+			sig = types.NewSignature(nil, nil, nil, false);
+			// Fun:  c.newIdent("__recv", types.NewSignature(nil, types.NewTuple(types.NewVar(0, nil, "", t)), types.NewTuple(types.NewVar(0, nil, "", exprType), types.NewVar(0, nil, "", types.Typ[types.Bool])), false)),
+		} else {
+			sig = c.p.TypeOf(plainFun).Underlying().(*types.Signature)
+		}
 
 		switch f := plainFun.(type) {
 		case *ast.Ident:
@@ -828,8 +844,7 @@ func (c *funcContext) translateExpr(expr ast.Expr, desiredType types.Type) (xprn
 				obj := c.p.Uses[f.Sel]
 
 				// jea: magic here!
-
-				if typesutil.IsJsPackage(obj.Pkg()) {
+				if obj!=nil && typesutil.IsJsPackage(obj.Pkg()) {
 					switch obj.Name() {
 					case "Debugger":
 						return c.formatExpr("debugger")

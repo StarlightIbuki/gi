@@ -50,6 +50,11 @@ func TranslateAndCatchPanic(inc *IncrState, src []byte) (translation string, err
 	return translation, err
 }
 
+func TranslateWithGoku(inc *IncrState, src []byte) (translation string, err error) {
+	by, err := inc.FullPackage([]byte(src), inc.CurPkg.pack.ImportPath, 999)
+	return string(by), err
+}
+
 func readHistory(histFn string) (history []string, err error) {
 	if !FileExists(histFn) {
 		return nil, nil

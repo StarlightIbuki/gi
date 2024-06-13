@@ -377,6 +377,7 @@ func (ic *IncrState) CompileTimeGiImportFunc(path, pkgDir string, depth int) (*A
 		// we need to load the type-checking info into arch.Pkg
 		// now so that the compile can complete.
 
+	case "kong":
 	case "gitesting":
 		// test only:
 		fmt.Printf("ic.cfg.IsTestMode = %v\n", ic.cfg.IsTestMode)

@@ -119,7 +119,7 @@ func NewLuaVmWithPrelude(cfg *GIConfig) (lvm *LuaVm, err error) {
 	var files []string
 	if useStaticPrelude {
 		if !cfg.Quiet {
-			fmt.Printf("Using static prelude.\n")
+			// fmt.Printf("Using static prelude.\n")
 		}
 		// static version, compiled into prelude_static.go
 
