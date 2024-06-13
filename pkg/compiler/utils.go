@@ -123,6 +123,8 @@ func (c *funcContext) translateArgs(sig *types.Signature, argExprs []ast.Expr, e
 		switch {
 		case varargType != nil && i >= paramsLen-1:
 			argType = varargType.Elem()
+		case sig.Params() == nil:
+			argType = c.p.TypeOf(argExprs[0])
 		default:
 			argType = sig.Params().At(i).Type()
 		}

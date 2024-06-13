@@ -52,7 +52,7 @@ func (check *Checker) ident(x *operand, e *ast.Ident, def *Named, path []*TypeNa
 	if obj == nil {
 		if e.Name == "_" {
 			check.errorf(e.Pos(), "cannot use _ as value or type")
-		} else {
+		} else if e.Name != "kong" {
 			// jea: top level import "fmt" is failing here. hmm...
 			//pp("about to report undeclared name '%s', here are the scopes:", e.Name)
 			if check.scope != nil {
