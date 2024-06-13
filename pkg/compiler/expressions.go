@@ -3,6 +3,7 @@ package compiler
 import (
 	"bytes"
 	"fmt"
+	"unicode"
 	"github.com/gijit/gi/pkg/ast"
 	"github.com/gijit/gi/pkg/constant"
 	"github.com/gijit/gi/pkg/printer"
@@ -44,6 +45,12 @@ func (e *expression) StringWithParens() string {
 
 // jea add
 func (c *funcContext) exprToString(expr ast.Expr) string {
+	var buf bytes.Buffer
+	printer.Fprint(&buf, c.p.fileSet, expr)
+	return buf.String()
+}
+
+func (c *funcContext) stmtToString(expr ast.Stmt) string {
 	var buf bytes.Buffer
 	printer.Fprint(&buf, c.p.fileSet, expr)
 	return buf.String()
@@ -755,7 +762,24 @@ func (c *funcContext) translateExpr(expr ast.Expr, desiredType types.Type) (xprn
 			pp("jea expressions.go:589, our ast.SelectorExpr.X='%#v', .Sel='%#v'", e.X, e.Sel)
 			// e.X.Name == "fmt", e.Sel.Name == "Sprintf"; both are *ast.Ident
 			if isKong {
-				return c.formatExpr("%s", exprStr)
+				snaked_expr := func (s string) string {
+					var result []rune
+				    for i, r := range s {
+				        if unicode.IsUpper(r) {
+				            // 如果不是第一个字符并且前一个字符不是 '.'，则插入下划线
+				            if i > 0 && s[i-1] != '.' {
+				                result = append(result, '_')
+				            }
+				            // 将大写字母转换为小写字母
+				            result = append(result, unicode.ToLower(r))
+				        } else {
+				            result = append(result, r)
+				        }
+				    }
+				    return string(result)
+				}(exprStr)
+
+				return c.formatExpr("%s", snaked_expr)
 			} else {
 				return c.formatExpr("%s", c.objectName(obj))
 			}
